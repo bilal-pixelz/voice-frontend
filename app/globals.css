@@ -1,0 +1,230 @@
+/* Global styles for Voice2Invoice */
+
+:root {
+  --bg: #0b1220;
+  --card: #101d2f;
+  --card-strong: #152641;
+  --text: #e6eefb;
+  --muted: rgba(230, 238, 251, 0.75);
+  --border: rgba(255, 255, 255, 0.12);
+  --brand: #0ea5e9;
+  --brand-strong: #38bdf8;
+  --success: #10b981;
+  --shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: radial-gradient(circle at top, rgba(14, 165, 233, 0.16), transparent 55%),
+    linear-gradient(180deg, #09121c 0%, #05090f 60%, #05050a 100%);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+main {
+  min-height: 100vh;
+  padding: 0;
+}
+
+.page-center {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  width: min(420px, 92vw);
+  margin: 0 auto;
+  padding: 28px 0 88px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+.card + .card {
+  margin-top: 16px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.page-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.badge span {
+  display: inline-flex;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.16);
+  color: var(--success);
+  font-weight: 600;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.input {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.input:focus {
+  border-color: rgba(14, 165, 233, 0.8);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.20);
+}
+
+.button {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  background: linear-gradient(90deg, rgba(14, 165, 233, 1) 0%, rgba(16, 185, 129, 1) 100%);
+  color: #0b1220;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.26);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 22px rgba(0, 0, 0, 0.28);
+}
+
+.button.secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.button.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.link-row {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-row a {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.small-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 14px 8px;
+  background: rgba(15, 23, 42, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.bottom-nav__tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: rgba(226, 238, 251, 0.65);
+  border-radius: 999px;
+  padding: 10px 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 120ms ease, background 120ms ease;
+}
+
+.bottom-nav__tab:hover {
+  color: var(--text);
+  background: rgba(14, 165, 233, 0.12);
+}
+
+.bottom-nav__label {
+  display: block;
+}
+
+// SUPPORT: responsive
+@media (max-width: 560px) {
+  .container {
+    padding: 24px 0 88px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+}
