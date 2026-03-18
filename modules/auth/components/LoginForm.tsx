@@ -1,8 +1,9 @@
-'use client'
+'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '../api';
 import { useAuthStore } from '@/store/authStore';
+import { toast } from 'react-hot-toast';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -11,7 +12,6 @@ export default function LoginForm() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const setToken = useAuthStore((state) => state.setToken);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +21,6 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     try {
       const form = new FormData();
       form.append('username', formData.username);
@@ -30,7 +29,7 @@ export default function LoginForm() {
       setToken(data.access_token);
       router.push('/');
     } catch (err: any) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -40,18 +39,17 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit}>
       <div className="form-field">
         <label htmlFor="username">Email</label>
-        <input id="username" className="input" type="email" placeholder="you@example.com" onChange={handleChange} />
+        <input id="username" className="input" type="email" placeholder="you@example.com" onChange={handleChange} required />
       </div>
 
       <div className="form-field">
         <label htmlFor="password">Password</label>
-        <input id="password" className="input" type="password" placeholder="••••••••" onChange={handleChange} />
+        <input id="password" className="input" type="password" placeholder="••••••••" onChange={handleChange} required />
       </div>
 
       <button className="button" type="submit" disabled={loading}>
         {loading ? 'Logging in...' : 'Continue to Voice 2 Invoice'}
       </button>
-      {error && <p className="small-text error" style={{ marginTop: 12 }}>{error}</p>}
     </form>
   );
 }

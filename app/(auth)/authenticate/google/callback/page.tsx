@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
+import { googleCallback } from '@/modules/auth/api';
 
 export default function GoogleCallbackPage() {
   const searchParams = useSearchParams();
@@ -10,12 +11,27 @@ export default function GoogleCallbackPage() {
   const setToken = useAuthStore((state) => state.setToken);
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    if (token) {
-      setToken(token);
-      router.push('/');
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+
+    const savedState = localStorage.getItem("oauth_state");
+    if (state !== savedState) {
+        router.push("/login?error=state_mismatch");
+        return;
+      }
+    
+    if (code && state) {
+      googleCallback(state, code)
+        .then((data) => {
+          setToken(data.access_token);
+          router.push('/');
+        })
+        .catch(() => {
+          router.push('/login');
+        });
     } else {
-      router.push('/login');
+      router.push('/login?error=missing_params');
     }
   }, [searchParams, router, setToken]);
 

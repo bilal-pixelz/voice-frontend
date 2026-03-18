@@ -2,16 +2,24 @@
 import Link from 'next/link'
 import PageHeader from '@/components/layout/PageHeader'
 import LoginForm from '@/modules/auth/components/LoginForm'
-import { getGoogleLoginUrl } from '@/modules/auth/api'
+import { getGoogleLoginUrl } from '@/modules/auth/api';
+import { toast } from 'react-hot-toast';
+import GoogleIcon from '@/components/icons/GoogleIcon';
 
 export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       const data = await getGoogleLoginUrl();
-      if (data.data.authorization_url) {
-        window.location.href = data.data.authorization_url;
+      if (data.code_verifier) {
+        localStorage.setItem('code_verifier', data.code_verifier);
       }
-    } catch (error) {
+      if (data.authorization_url) {
+        window.location.href = data.authorization_url;
+      } else {
+        toast.error('Could not get Google authorization URL.');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to get Google login URL');
       console.error('Failed to get Google login URL', error);
     }
   };
@@ -38,7 +46,13 @@ export default function LoginPage() {
           <p className="small-text" style={{ marginBottom: 10 }}>
             Or sign in with a provider.
           </p>
-          <button className="button secondary" onClick={handleGoogleLogin} type="button">
+          <button
+            className="button secondary"
+            onClick={handleGoogleLogin}
+            type="button"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <GoogleIcon />
             Login with Google
           </button>
         </div>
