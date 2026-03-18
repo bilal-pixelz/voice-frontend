@@ -14,20 +14,25 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isHydrated, setIsHydrated] = useState(useAuthStore.persist.hasHydrated());
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedToken = useAuthStore.getState().token;
-      if (!storedToken) {
-        router.replace('/login');
-      } else {
-        setIsCheckingAuth(false);
-      }
-    }
-  }, [router]);
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      setIsHydrated(true);
+    });
 
-  if (isCheckingAuth) {
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && !token) {
+      router.replace('/login');
+    }
+  }, [isHydrated, token, router]);
+
+  if (!isHydrated) {
     return (
       <div className="page-center">
         <p>Loading...</p>
