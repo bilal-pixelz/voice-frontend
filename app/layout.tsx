@@ -12,7 +12,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <UserProvider>
-          {children}
+          <main>{children}</main>
         </UserProvider>
         <Toaster />
       </body>

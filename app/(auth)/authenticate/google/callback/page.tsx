@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { googleCallback } from '@/modules/auth/api';
+import { toast } from 'react-hot-toast';
 
 export default function GoogleCallbackPage() {
   const searchParams = useSearchParams();
@@ -11,27 +12,27 @@ export default function GoogleCallbackPage() {
   const setToken = useAuthStore((state) => state.setToken);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    const state = params.get("state");
+    const code = searchParams.get('code');
+    const state = searchParams.get('state');
+    const codeVerifier = localStorage.getItem('code_verifier');
 
-    const savedState = localStorage.getItem("oauth_state");
-    if (state !== savedState) {
-        router.push("/login?error=state_mismatch");
-        return;
-      }
-    
-    if (code && state) {
-      googleCallback(state, code)
+    if (code && state && codeVerifier) {
+      googleCallback(state, code, codeVerifier)
         .then((data) => {
           setToken(data.access_token);
-          router.push('/');
+          localStorage.removeItem('code_verifier');
+          localStorage.removeItem('oauth_state');
+          router.push('/dashboard');
         })
-        .catch(() => {
+        .catch((error) => {
+          toast.error(error.message);
+          localStorage.removeItem('code_verifier');
+          localStorage.removeItem('oauth_state');
           router.push('/login');
         });
     } else {
-      router.push('/login?error=missing_params');
+      toast.error('Invalid callback state. Please try again.');
+      router.push('/login');
     }
   }, [searchParams, router, setToken]);
 

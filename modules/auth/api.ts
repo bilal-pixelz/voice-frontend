@@ -21,11 +21,14 @@ export const login = async (formData: FormData) => {
     const response = await apiClient.post('/auth/token', formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
-    // NOTE: /auth/token for password login likely returns the token directly
-    // without the { success, data, message } wrapper. If it fails, it throws.
-    return response.data;
+    if (response.data && response.data.success) {
+      return response.data.data;
+    } else {
+      // This case might happen if success=False is returned with a 200 OK status
+      throw new Error(response.data.message || 'Login failed.');
+    }
   } catch (error: any) {
-    // FastAPI/OAuth2 returns { "detail": "Incorrect username or password" }
+    // This handles 4xx/5xx errors, like the 401 from the backend
     const errorMessage =
       error.response?.data?.detail || error.response?.data?.message || error.message || 'An unknown error occurred';
     throw new Error(errorMessage);

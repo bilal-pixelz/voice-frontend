@@ -27,7 +27,7 @@ export default function LoginForm() {
       form.append('password', formData.password);
       const data = await login(form);
       setToken(data.access_token);
-      router.push('/');
+      router.push('/dashboard');
     } catch (err: any) {
       toast.error(err.message);
     } finally {
