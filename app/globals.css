@@ -1,4 +1,8 @@
 /* Global styles for Voice2Invoice */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 :root {
   --bg: #0b1220;
@@ -218,7 +222,7 @@ main {
   display: block;
 }
 
-// SUPPORT: responsive
+
 @media (max-width: 560px) {
   .container {
     padding: 24px 0 88px;

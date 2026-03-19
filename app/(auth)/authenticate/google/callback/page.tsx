@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 export default function GoogleCallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const setToken = useAuthStore((state) => state.setToken);
+  const { setToken, setUser } = useAuthStore();
 
   useEffect(() => {
     const code = searchParams.get('code');
@@ -20,21 +20,29 @@ export default function GoogleCallbackPage() {
       googleCallback(state, code, codeVerifier)
         .then((data) => {
           setToken(data.access_token);
+          // Assuming the API returns user data along with token
+          if (data.user) {
+            setUser({
+              email: data.user.email,
+              name: data.user.first_name,
+              //avatar: data.user.avatar,
+            });
+          }
           localStorage.removeItem('code_verifier');
           localStorage.removeItem('oauth_state');
-          router.push('/dashboard');
+          router.replace('/dashboard');
         })
         .catch((error) => {
           toast.error(error.message);
           localStorage.removeItem('code_verifier');
           localStorage.removeItem('oauth_state');
-          router.push('/login');
+          router.replace('/login');
         });
     } else {
       toast.error('Invalid callback state. Please try again.');
-      router.push('/login');
+      router.replace('/login');
     }
-  }, [searchParams, router, setToken]);
+  }, [searchParams, router, setToken, setUser]);
 
   return (
     <main className="page-center">

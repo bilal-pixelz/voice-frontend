@@ -5,8 +5,20 @@ import LoginForm from '@/modules/auth/components/LoginForm'
 import { getGoogleLoginUrl } from '@/modules/auth/api';
 import { toast } from 'react-hot-toast';
 import GoogleIcon from '@/components/icons/GoogleIcon';
+import { useEffect } from 'react';
+import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+      if (isAuthenticated) {
+        router.replace('/dashboard');
+      }
+    }, [isAuthenticated, router]);
+    
   const handleGoogleLogin = async () => {
     try {
       const data = await getGoogleLoginUrl();
@@ -38,7 +50,7 @@ export default function LoginPage() {
           <LoginForm />
 
           <p className="small-text" style={{ marginTop: 12 }}>
-            Don't have an account? <Link href="/register">Sign up</Link> instead.
+            Don&apos;t have an account? <Link href="/register">Sign up</Link> instead.
           </p>
         </div>
 

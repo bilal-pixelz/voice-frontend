@@ -12,7 +12,7 @@ export default function LoginForm() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
-  const setToken = useAuthStore((state) => state.setToken);
+  const { setToken, setUser } = useAuthStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -27,6 +27,14 @@ export default function LoginForm() {
       form.append('password', formData.password);
       const data = await login(form);
       setToken(data.access_token);
+    
+      if (data.user) {
+        setUser({
+          email: data.user.email,
+          name: data.user.name || `${data.user.first_name} ${data.user.last_name}`,
+          //avatar: data.user.avatar,
+        });
+      }
       router.push('/dashboard');
     } catch (err: any) {
       toast.error(err.message);
