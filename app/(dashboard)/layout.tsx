@@ -1,7 +1,8 @@
-'use client'
-import { useUser } from '@auth0/nextjs-auth0/client';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useAuthStore } from '@/store/authStore';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import BottomNav from '@/components/layout/BottomNav';
@@ -11,27 +12,38 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isLoading } = useUser();
   const router = useRouter();
+  const token = useAuthStore((state) => state.token);
+  const [isHydrated, setIsHydrated] = useState(useAuthStore.persist.hasHydrated());
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      setIsHydrated(true);
+    });
+
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && !token) {
       router.replace('/login');
     }
-  }, [isLoading, user, router]);
+  }, [isHydrated, token, router]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!user) {
-    return null;
+  if (!isHydrated) {
+    return (
+      <div className="page-center">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar />
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1, padding: '1rem' }}>
         <Header />
         {children}
         <BottomNav />

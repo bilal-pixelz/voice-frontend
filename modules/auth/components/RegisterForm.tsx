@@ -1,19 +1,20 @@
-'use client'
+'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { register } from '../api';
+import { toast } from 'react-hot-toast';
 
 export default function RegisterForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    confirm_password: '',
     first_name: '',
     last_name: '',
     phone_number: '',
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -21,13 +22,18 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (formData.password !== formData.confirm_password) {
+      toast.error('Passwords do not match.');
+      return;
+    }
     setLoading(true);
-    setError(null);
     try {
-      await register(formData);
+      const { confirm_password, ...registerData } = formData;
+      await register(registerData);
+      toast.success('Registration successful! Please log in.');
       router.push('/login');
     } catch (err: any) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -37,15 +43,15 @@ export default function RegisterForm() {
     <form onSubmit={handleSubmit}>
       <div className="form-field">
         <label htmlFor="first_name">First name</label>
-        <input id="first_name" className="input" type="text" placeholder="John" onChange={handleChange} />
+        <input id="first_name" className="input" type="text" placeholder="John" onChange={handleChange} required />
       </div>
       <div className="form-field">
         <label htmlFor="last_name">Last name</label>
-        <input id="last_name" className="input" type="text" placeholder="Doe" onChange={handleChange} />
+        <input id="last_name" className="input" type="text" placeholder="Doe" onChange={handleChange} required />
       </div>
       <div className="form-field">
         <label htmlFor="email">Email</label>
-        <input id="email" className="input" type="email" placeholder="you@example.com" onChange={handleChange} />
+        <input id="email" className="input" type="email" placeholder="you@example.com" onChange={handleChange} required />
       </div>
       <div className="form-field">
         <label htmlFor="phone_number">Phone number</label>
@@ -53,14 +59,16 @@ export default function RegisterForm() {
       </div>
       <div className="form-field">
         <label htmlFor="password">Password</label>
-        <input id="password" className="input" type="password" placeholder="Choose a password" onChange={handleChange} />
+        <input id="password" className="input" type="password" placeholder="Choose a password" onChange={handleChange} required minLength={8} />
+      </div>
+      <div className="form-field">
+        <label htmlFor="confirm_password">Confirm Password</label>
+        <input id="confirm_password" className="input" type="password" placeholder="Confirm your password" onChange={handleChange} required minLength={8} />
       </div>
 
       <button className="button" type="submit" disabled={loading}>
         {loading ? 'Creating account...' : 'Create account'}
       </button>
-
-      {error && <p className="small-text error" style={{ marginTop: 12 }}>{error}</p>}
     </form>
   );
 }

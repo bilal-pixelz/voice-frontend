@@ -1,6 +1,7 @@
 'use client'
 import './globals.css'
 import { UserProvider } from '@auth0/nextjs-auth0/client'
+import { Toaster } from 'react-hot-toast'
 
 export default function RootLayout({
   children,
@@ -11,8 +12,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <UserProvider>
-          {children}
+          <main>{children}</main>
         </UserProvider>
+        <Toaster />
       </body>
     </html>
   )
