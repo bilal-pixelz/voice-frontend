@@ -38,10 +38,10 @@ export default function SignupPage() {
 
   return (
     <main className="page-center">
-      <div className="container">
+      <div className="container" style={{ width: 'min(550px, 98vw)' }}>
         <PageHeader title="Voice 2 Invoice" />
 
-        <div className="card">
+        <div className="card" style={{ marginBottom: 24 }}>
           <h2
             className="page-title"
             style={{ fontSize: '1.5rem', marginBottom: 12 }}

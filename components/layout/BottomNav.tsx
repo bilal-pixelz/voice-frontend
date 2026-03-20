@@ -20,24 +20,26 @@ export default function BottomNav() {
     if (pathname.startsWith('/messages')) return 'message';
     if (pathname.startsWith('/history')) return 'history';
     if (pathname.startsWith('/settings/profile')) return 'profile';
-    return 'voice'; // Default active tab
+    return ''; // Default active tab
   };
 
   const activeKey = getActiveKey();
 
   return (
     <nav className="bottom-nav">
-      {navItems.map((item) => {
-        const isActive = activeKey === item.key;
-        const activeStyle = isActive ? { color: 'var(--brand)' } : {};
+      <div className="bottom-nav__group">
+        {navItems.map((item) => {
+          const isActive = activeKey === item.key;
+          const activeStyle = isActive ? { color: 'var(--brand)' } : {};
 
-        return (
-          <Link key={item.key} href={item.href} className="bottom-nav__tab" style={activeStyle}>
-            {item.icon(isActive)}
-            <span className="bottom-nav__label">{item.label}</span>
-          </Link>
-        );
-      })}
+          return (
+            <Link key={item.key} href={item.href} className="bottom-nav__tab" style={activeStyle}>
+              {item.icon(isActive)}
+              <span className="bottom-nav__label">{item.label}</span>
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

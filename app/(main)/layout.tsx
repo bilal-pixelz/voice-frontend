@@ -8,7 +8,7 @@ import Header from '@/components/layout/Header';
 import BottomNav from '@/components/layout/BottomNav';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isTokenExpired, logout } = useAuthStore();
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
 
@@ -17,8 +17,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (hydrated && !isAuthenticated) {
-      router.replace('/login');
+    if (hydrated) {
+      if (!isAuthenticated || isTokenExpired()) {
+        logout();
+        router.replace('/login');
+      }
     }
   }, [hydrated, isAuthenticated, router]);
 
@@ -31,9 +34,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen font-sans flex flex-col">
       <Header />
-      <div>{children}</div>
+      <main className="flex-1 flex flex-col items-center justify-start w-full" style={{ paddingTop: '84px' }}>
+        {children}
+      </main>
       <BottomNav />
     </div>
   );

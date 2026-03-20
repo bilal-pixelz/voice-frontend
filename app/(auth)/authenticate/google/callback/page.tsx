@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useNotificationStore } from '@/store/notificationStore';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { googleCallback } from '@/modules/auth/api';
@@ -10,6 +11,7 @@ export default function GoogleCallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { setToken, setUser } = useAuthStore();
+  const { setMessage } = useNotificationStore();
 
   useEffect(() => {
     const code = searchParams.get('code');
@@ -19,7 +21,7 @@ export default function GoogleCallbackPage() {
     if (code && state && codeVerifier) {
       googleCallback(state, code, codeVerifier)
         .then((data) => {
-          setToken(data.access_token);
+          setToken(data.access_token, data.expires_in);
           // Assuming the API returns user data along with token
           if (data.user) {
             setUser({
@@ -30,6 +32,7 @@ export default function GoogleCallbackPage() {
           }
           localStorage.removeItem('code_verifier');
           localStorage.removeItem('oauth_state');
+          setMessage('Logged in successfully');
           router.replace('/dashboard');
         })
         .catch((error) => {
@@ -42,13 +45,13 @@ export default function GoogleCallbackPage() {
       toast.error('Invalid callback state. Please try again.');
       router.replace('/login');
     }
-  }, [searchParams, router, setToken, setUser]);
+  }, [searchParams, router, setToken, setUser, setMessage]);
 
   return (
     <main className="page-center">
       <div className="container">
         <div className="card">
-          <h1 className="page-title">Logging you in...</h1>
+                    <h1 className="page-title">Logging you in...</h1>
           <p className="small-text">Please wait while we log you in with your Google account.</p>
         </div>
       </div>

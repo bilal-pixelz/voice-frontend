@@ -21,22 +21,15 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
 
-      setToken: (token) => {
-        // decode expiry from JWT payload
-        try {
-          const payload = JSON.parse(atob(token.split(".")[1]));
-          set({
-            token,
-            tokenExpiresAt: payload.exp * 1000, // convert to ms
-            isAuthenticated: true,
-          });
-        } catch (error) {
-          // If JWT parsing fails, just set the token without expiry
-          set({
-            token,
-            isAuthenticated: true,
-          });
-        }
+      setToken: (token: string, expiresIn?: number) => {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expiry = payload.exp * 1000;
+
+        set({
+          token,
+          tokenExpiresAt: expiresIn ? Date.now() + expiresIn * 1000 : expiry,
+          isAuthenticated: true,
+        });
       },
 
       setUser: (user) =>
@@ -44,8 +37,7 @@ export const useAuthStore = create<AuthState>()(
 
       isTokenExpired: () => {
         const { token, tokenExpiresAt } = get();
-        if (!token) return false;           // no token = not expired, just not logged in
-        if (!tokenExpiresAt) return false;  // no expiry stored = assume valid
+        if (!token || !tokenExpiresAt) return true;
         return Date.now() > tokenExpiresAt - 60000;
       },
 
@@ -53,7 +45,7 @@ export const useAuthStore = create<AuthState>()(
         set({ token: null, tokenExpiresAt: null, user: null, isAuthenticated: false }),
     }),
     {
-      name: "auth-storage", // persists to localStorage
+      name: "auth-storage",
       partialize: (state) => ({
         token: state.token,
         tokenExpiresAt: state.tokenExpiresAt,

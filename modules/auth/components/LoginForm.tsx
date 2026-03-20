@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '../api';
+import { useNotificationStore } from '@/store/notificationStore';
 import { useAuthStore } from '@/store/authStore';
 import { toast } from 'react-hot-toast';
 
@@ -13,6 +14,7 @@ export default function LoginForm() {
   });
   const [loading, setLoading] = useState(false);
   const { setToken, setUser } = useAuthStore();
+  const { setMessage } = useNotificationStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -26,7 +28,7 @@ export default function LoginForm() {
       form.append('username', formData.username);
       form.append('password', formData.password);
       const data = await login(form);
-      setToken(data.access_token);
+      setToken(data.access_token, data.expires_in);
     
       if (data.user) {
         setUser({
@@ -35,6 +37,7 @@ export default function LoginForm() {
           //avatar: data.user.avatar,
         });
       }
+      setMessage('Logged in successfully');
       router.push('/dashboard');
     } catch (err: any) {
       toast.error(err.message);
