@@ -28,7 +28,11 @@ export default function RegisterForm() {
     }
     setLoading(true);
     try {
-      const { confirm_password, ...registerData } = formData;
+      const { confirm_password, first_name, last_name, ...restData } = formData;
+      const registerData = {
+        ...restData,
+        name: `${first_name} ${last_name}`.trim(),
+      };
       await register(registerData);
       toast.success('Registration successful! Please log in.');
       router.push('/login');

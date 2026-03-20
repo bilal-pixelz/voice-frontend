@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { useAuthStore } from '@/store/authStore'
 import PageHeader from '@/components/layout/PageHeader';
 import RegisterForm from '@/modules/auth/components/RegisterForm';
 import { getGoogleLoginUrl } from '@/modules/auth/api';
@@ -11,13 +11,13 @@ import GoogleIcon from '@/components/icons/GoogleIcon';
 
 export default function SignupPage() {
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    if (user) {
-      router.replace('/');
+    if (isAuthenticated) {
+      router.replace('/dashboard');
     }
-  }, [user, router]);
+  }, [isAuthenticated, router]);
 
   const handleGoogleRegister = async () => {
     try {
@@ -36,38 +36,12 @@ export default function SignupPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <main className="page-center">
-        <div className="container">
-          <div className="card">
-            <h1 className="page-title">Loading…</h1>
-            <p className="small-text">Preparing an account for you.</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="page-center">
-        <div className="container">
-          <div className="card">
-            <h1 className="page-title">Something went wrong</h1>
-            <p className="small-text">{error.message}</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main className="page-center">
-      <div className="container">
+      <div className="container" style={{ width: 'min(550px, 98vw)' }}>
         <PageHeader title="Voice 2 Invoice" />
 
-        <div className="card">
+        <div className="card" style={{ marginBottom: 24 }}>
           <h2
             className="page-title"
             style={{ fontSize: '1.5rem', marginBottom: 12 }}

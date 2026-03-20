@@ -1,12 +1,24 @@
-import Image from "next/image";
+
+import Image from 'next/image';
 
 const Logo = () => {
   return (
-    <div className="flex items-center">
-      <Image src="/logo.svg" alt="Voice 2 Invoice" width={40} height={40} />
-      <span className="ml-2 text-lg font-semibold text-blue-400">
-        Voice <span className="text-white">2</span> Invoice
-      </span>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, userSelect: 'none' }}>
+      <img src="/logo.svg" alt="Voice 2 Invoice Logo" width={36} height={36} style={{ display: 'block', flexShrink: 0 }} />
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        fontWeight: 700,
+        fontSize: '1.25rem',
+        color: '#e6eefb',
+        letterSpacing: '-0.02em',
+        lineHeight: 1,
+        marginLeft: 2
+      }}>
+        <span style={{ fontWeight: 700 }}>Voice</span>
+        <span style={{ color: '#0ea5e9', fontWeight: 700, marginLeft: 4 }}>2</span>
+        <span style={{ color: '#38bdf8', fontWeight: 700, marginLeft: 2 }}>Invoice</span>
+      </div>
     </div>
   );
 };

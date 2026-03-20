@@ -1,6 +1,5 @@
-'use client'
+// app/layout.tsx
 import './globals.css'
-import { UserProvider } from '@auth0/nextjs-auth0/client'
 import { Toaster } from 'react-hot-toast'
 
 export default function RootLayout({
@@ -11,9 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <UserProvider>
-          <main>{children}</main>
-        </UserProvider>
+        <main>{children}</main>
         <Toaster />
       </body>
     </html>
