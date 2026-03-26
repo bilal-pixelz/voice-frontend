@@ -36,7 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen font-sans flex flex-col">
       <Header />
-      <main className="flex-1 flex flex-col items-center justify-start w-full" style={{ paddingTop: '84px' }}>
+      <main className="flex-1 flex flex-col items-center justify-start w-full" style={{ paddingTop: '54px' }}>
         {children}
       </main>
       <BottomNav />

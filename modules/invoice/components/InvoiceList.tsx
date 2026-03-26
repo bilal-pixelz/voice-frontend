@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { getInvoices } from '@/modules/xero/api';
 import { useInvoiceStore } from '@/store/invoiceStore';
 import { Invoice } from '@/types/invoice';
@@ -44,12 +45,23 @@ export default function InvoiceList() {
       {invoices.length === 0 ? (
         <p>No invoices found.</p>
       ) : (
-        <ul>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
           {invoices.map((invoice) => (
-            <li key={invoice.id}>
-              <p>Recipient: {invoice.recipient}</p>
-              <p>Amount: {invoice.amount}</p>
-              <p>Due Date: {invoice.dueDate}</p>
+            <li
+              key={invoice.id}
+              style={{
+                marginBottom: 12,
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: 10,
+                padding: 12,
+                background: 'var(--card)',
+              }}
+            >
+              <Link href={`/invoice/${invoice.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                <p style={{ margin: '0 0 4px 0', fontWeight: 700 }}>{invoice.recipient}</p>
+                <p style={{ margin: '0', color: 'var(--muted)' }}>Amount: {invoice.amount}</p>
+                <p style={{ margin: '0', color: 'var(--muted)' }}>Due Date: {invoice.dueDate}</p>
+              </Link>
             </li>
           ))}
         </ul>
