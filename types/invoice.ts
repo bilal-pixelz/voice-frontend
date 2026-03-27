@@ -7,7 +7,8 @@ export interface InvoiceItem {
 }
 
 export interface Invoice {
-  id: number;
+  id: string;
+  invoice_number: string;
   user_id: number;
   customer_name: string | null;
   customer_email: string | null;
@@ -28,8 +29,8 @@ export interface Invoice {
 }
 
 export interface LineItem {
-  id: number;
-  invoice_id: number;
+  id: string
+  invoice_id: string
   description: string;
   quantity: number | null;
   unit_price: number | null;
