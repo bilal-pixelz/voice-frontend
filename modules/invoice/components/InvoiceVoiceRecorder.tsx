@@ -39,10 +39,16 @@ export default function InvoiceVoiceRecorder() {
     try {
       const formData = new FormData();
       formData.append('file', audioBlob, 'recording.webm');
-      await apiClient.post('/invoices/from-audio', formData);
+      const response = await apiClient.post('/invoices/from-audio', formData);
+      const invoiceId = response.data?.data?.invoice?.id;
       toast.success('Invoice created successfully!');
       resetRecording();
-      router.push('/invoice');
+      if (invoiceId) {
+        router.push(`/invoice/${invoiceId}`);
+      } else {
+        // Fallback if ID is missing for some reason
+        router.push('/invoice');
+      }
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || err.message || 'Failed to create invoice';
       setError(errorMessage);
@@ -54,7 +60,7 @@ export default function InvoiceVoiceRecorder() {
 
   const handleCancel = () => {
     resetRecording();
-    router.back();
+    router.push('/invoice/new'); // or wherever you want to navigate on cancel
   };
 
   const formatTime = (seconds: number) => {

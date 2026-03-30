@@ -7,7 +7,7 @@ interface AuthState {
   tokenExpiresAt: number | null;
   user: User | null;
   isAuthenticated: boolean;
-  setToken: (token: string) => void;
+  setToken: (token: string, expiresIn?: number) => void;
   setUser: (user: User) => void;
   isTokenExpired: () => boolean;
   logout: () => void;
@@ -22,12 +22,20 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       setToken: (token: string, expiresIn?: number) => {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const expiry = payload.exp * 1000;
+        let expiry: number;
+
+        if (expiresIn) {
+          // Current time + duration from backend
+          expiry = Date.now() + expiresIn * 1000;
+        } else {
+          // Fallback: Decode the JWT if the backend didn't provide expires_in
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          expiry = payload.exp * 1000;
+        }
 
         set({
           token,
-          tokenExpiresAt: expiresIn ? Date.now() + expiresIn * 1000 : expiry,
+          tokenExpiresAt: expiry,
           isAuthenticated: true,
         });
       },

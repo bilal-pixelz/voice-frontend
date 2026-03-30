@@ -4,7 +4,7 @@ import { Invoice } from '@/types/invoice';
 export const getInvoiceById = async (id: string): Promise<Invoice> => {
   try {
     const response = await apiClient.get(`/invoices/${id}`);
-    return response.data;
+    return response.data.data;
   } catch (error: any) {
     const message = error.response?.data?.message || error.message || 'Failed to load invoice';
     throw new Error(message);
