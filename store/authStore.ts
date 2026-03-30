@@ -7,7 +7,7 @@ interface AuthState {
   tokenExpiresAt: number | null;
   user: User | null;
   isAuthenticated: boolean;
-  setToken: (token: string) => void;
+  setToken: (token: string, expiresIn?: number) => void;
   setUser: (user: User) => void;
   isTokenExpired: () => boolean;
   logout: () => void;
