@@ -26,6 +26,7 @@ export interface Invoice {
   created_at: string;
   updated_at: string;
   line_items: LineItem[];
+  notes: string | null;
 }
 
 export interface LineItem {

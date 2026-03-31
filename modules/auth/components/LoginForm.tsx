@@ -1,10 +1,10 @@
 'use client';
+import { handleApiError } from '@/lib/error-handler';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '../api';
 import { useNotificationStore } from '@/store/notificationStore';
 import { useAuthStore } from '@/store/authStore';
-import { toast } from 'react-hot-toast';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -33,14 +33,16 @@ export default function LoginForm() {
       if (data.user) {
         setUser({
           email: data.user.email,
-          name: data.user.name || `${data.user.first_name} ${data.user.last_name}`,
+          first_name: data.user.first_name,
+          last_name: data.user.last_name,
+          phone_number: data.user.phone_number,
           //avatar: data.user.avatar,
         });
       }
       setMessage('Logged in successfully');
       router.push('/dashboard');
     } catch (err: any) {
-      toast.error(err.message);
+      handleApiError(err);
     } finally {
       setLoading(false);
     }

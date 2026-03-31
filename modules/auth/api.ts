@@ -10,8 +10,10 @@ export const register = async (userData: Omit<User, 'id'>) => {
       throw new Error(response.data.message || 'Registration failed.');
     }
   } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.detail || error.response?.data?.message || error.message || 'An unknown error occurred';
+    if (error.response && error.response.data) {
+      throw error.response.data;
+    }
+    const errorMessage = error.message || 'An unknown error occurred';
     throw new Error(errorMessage);
   }
 };
@@ -28,9 +30,11 @@ export const login = async (formData: FormData) => {
       throw new Error(response.data.message || 'Login failed.');
     }
   } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw error.response.data;
+    }
     // This handles 4xx/5xx errors, like the 401 from the backend
-    const errorMessage =
-      error.response?.data?.detail || error.response?.data?.message || error.message || 'An unknown error occurred';
+    const errorMessage = error.message || 'An unknown error occurred';
     throw new Error(errorMessage);
   }
 };
@@ -46,8 +50,10 @@ export const getGoogleLoginUrl = async () => {
       throw new Error(response.data.message || 'Failed to get Google login URL.');
     }
   } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message || error.message || 'An unknown error occurred';
+    if (error.response && error.response.data) {
+      throw error.response.data;
+    }
+    const errorMessage = error.message || 'An unknown error occurred';
     throw new Error(errorMessage);
   }
 };
@@ -70,6 +76,9 @@ export const googleCallback = async (
       throw new Error(response.data.message || 'Google login failed.');
     }
   } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw error.response.data;
+    }
     const errorMessage =
       error.response?.data?.message || error.message || 'An unknown error occurred';
     throw new Error(errorMessage);

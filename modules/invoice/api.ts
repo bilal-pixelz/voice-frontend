@@ -11,6 +11,12 @@ export const getInvoiceById = async (id: string): Promise<Invoice> => {
   }
 };
 
+export const updateInvoice = async (id: string, data: Partial<Invoice>) => {
+  const response = await apiClient.patch(`/invoices/${id}`, data);
+  if (response.data?.success) return response.data.data;
+  throw new Error(response.data?.message || 'Failed to update invoice');
+};
+
 export const createInvoiceFromAudio = async (file: Blob): Promise<Invoice> => {
   const formData = new FormData();
   formData.append('file', file, 'recording.webm');

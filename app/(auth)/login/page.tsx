@@ -3,7 +3,7 @@ import Link from 'next/link'
 import PageHeader from '@/components/layout/PageHeader'
 import LoginForm from '@/modules/auth/components/LoginForm'
 import { getGoogleLoginUrl } from '@/modules/auth/api';
-import { toast } from 'react-hot-toast';
+import { handleApiError } from '@/lib/error-handler';
 import GoogleIcon from '@/components/icons/GoogleIcon';
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
@@ -28,11 +28,11 @@ export default function LoginPage() {
       if (data.authorization_url) {
         window.location.href = data.authorization_url;
       } else {
-        toast.error('Could not get Google authorization URL.');
+        handleApiError({ message: 'Could not get Google authorization URL.' });
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to get Google login URL');
-      console.error('Failed to get Google login URL', error);
+    } catch (err: any) {
+      handleApiError(err);
+      console.error('Failed to get Google login URL', err);
     }
   };
 

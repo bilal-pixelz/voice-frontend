@@ -1,4 +1,5 @@
-'use client';
+import { handleApiError } from '@/lib/error-handler';
+import { useAuthStore } from '@/store/authStore';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { register } from '../api';
@@ -6,6 +7,7 @@ import { toast } from 'react-hot-toast';
 
 export default function RegisterForm() {
   const router = useRouter();
+  const { setToken, setUser } = useAuthStore();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -28,16 +30,13 @@ export default function RegisterForm() {
     }
     setLoading(true);
     try {
-      const { confirm_password, first_name, last_name, ...restData } = formData;
-      const registerData = {
-        ...restData,
-        name: `${first_name} ${last_name}`.trim(),
-      };
-      await register(registerData);
-      toast.success('Registration successful! Please log in.');
-      router.push('/login');
+      const data = await register(formData);
+      setToken(data.access_token, data.expires_in);
+      setUser(data.user);
+      toast.success('Registration successful! You are now logged in.');
+      router.push('/dashboard');
     } catch (err: any) {
-      toast.error(err.message);
+      handleApiError(err);
     } finally {
       setLoading(false);
     }

@@ -24,10 +24,14 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthEndpoint = error.config?.url?.includes('/auth/');
+
+    if (error.response?.status === 401 && !isAuthEndpoint) {
+      // only redirect if token expired, not if login itself fails
       useAuthStore.getState().logout();
-      window.location.href = "/login";
+      window.location.href = '/login';
     }
+
     return Promise.reject(error);
   }
 );
