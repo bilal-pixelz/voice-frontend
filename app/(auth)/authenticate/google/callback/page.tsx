@@ -5,7 +5,7 @@ import { useNotificationStore } from '@/store/notificationStore';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { googleCallback } from '@/modules/auth/api';
-import { toast } from 'react-hot-toast';
+import { handleApiError } from '@/lib/error-handler';
 
 export default function GoogleCallbackPage() {
   const searchParams = useSearchParams();
@@ -35,14 +35,14 @@ export default function GoogleCallbackPage() {
           setMessage('Logged in successfully');
           router.replace('/dashboard');
         })
-        .catch((error) => {
-          toast.error(error.message);
+        .catch((err) => {
+          handleApiError(err);
           localStorage.removeItem('code_verifier');
           localStorage.removeItem('oauth_state');
           router.replace('/login');
         });
     } else {
-      toast.error('Invalid callback state. Please try again.');
+      handleApiError({ message: 'Invalid callback state. Please try again.' });
       router.replace('/login');
     }
   }, [searchParams, router, setToken, setUser, setMessage]);

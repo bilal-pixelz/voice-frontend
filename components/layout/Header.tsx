@@ -90,7 +90,11 @@ const Header = () => {
       >
         <Logo />
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}>
+          <button
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+            onClick={() => router.push('/help')}
+            aria-label="Help & Support"
+          >
             <HelpIcon />
           </button>
           <button
