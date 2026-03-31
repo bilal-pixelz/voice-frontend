@@ -1,16 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import { useAuthStore } from '@/store/authStore';
 import { useNotificationStore } from '@/store/notificationStore';
+import { getDashboard, DashboardData } from '@/modules/invoice/api';
 import Stats from '@/modules/dashboard/components/Stats';
 import RecentInvoices from '@/modules/dashboard/components/RecentInvoices';
 
 export default function DashboardPage() {
   const { message, setMessage } = useNotificationStore();
   const { user } = useAuthStore();
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (message) {
@@ -18,6 +21,13 @@ export default function DashboardPage() {
       setMessage(null);
     }
   }, [message, setMessage]);
+
+  useEffect(() => {
+    getDashboard()
+      .then(setData)
+      .catch(() => toast.error('Failed to load dashboard'))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className="container">
@@ -33,9 +43,14 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      <Stats />
-
-      <RecentInvoices />
+      {loading ? (
+        <p style={{ color: 'var(--muted)', textAlign: 'center', paddingTop: 40 }}>Loading...</p>
+      ) : (
+        <>
+          <Stats stats={data?.stats ?? null} />
+          <RecentInvoices invoices={data?.recent_invoices ?? []} />
+        </>
+      )}
     </div>
   );
 }

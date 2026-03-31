@@ -14,9 +14,14 @@ const STATUS_STYLES: Record<string, { bg: string; color: string }> = {
 }
 
 const SOURCE_LABEL: Record<string, string> = {
+  web_audio: 'Voice',
+  web_text: 'Text',
+  whatsapp_audio: 'WhatsApp Audio',
+  whatsapp_text: 'WhatsApp Text',
+  upload: 'Upload',
+  // legacy
   whatsapp: 'WhatsApp',
   web: 'Voice',
-  upload: 'Upload',
 }
 
 export default function InvoiceList({ search = '' }: { search?: string }) {

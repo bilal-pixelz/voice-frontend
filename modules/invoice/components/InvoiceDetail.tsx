@@ -6,6 +6,16 @@ import ModernTemplate from './templates/ModernTemplate';
 import ClassicTemplate from './templates/ClassicTemplate';
 import BoldTemplate from './templates/BoldTemplate';
 
+const SOURCE_LABEL: Record<string, string> = {
+  web_audio: 'Voice',
+  web_text: 'Text',
+  whatsapp_audio: 'WhatsApp Audio',
+  whatsapp_text: 'WhatsApp Text',
+  upload: 'Upload',
+  whatsapp: 'WhatsApp',
+  web: 'Voice',
+};
+
 interface InvoiceDetailProps {
   invoice: Invoice;
   onEdit?: () => void;
@@ -55,7 +65,7 @@ export default function InvoiceDetail({
       )}
 
       {onEdit && (
-        <div style={{ marginBottom: 12 }}>
+        <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
           <button
             onClick={onEdit}
             style={{
@@ -67,6 +77,15 @@ export default function InvoiceDetail({
           >
             TAP TO EDIT
           </button>
+          {invoice.source && (
+            <span style={{
+              fontSize: '0.75rem', padding: '4px 12px',
+              borderRadius: 999, border: '1px solid var(--border)',
+              color: 'var(--muted)', fontWeight: 600,
+            }}>
+              {SOURCE_LABEL[invoice.source] ?? invoice.source}
+            </span>
+          )}
         </div>
       )}
 

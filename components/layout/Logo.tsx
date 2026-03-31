@@ -1,9 +1,10 @@
-
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const Logo = () => {
+  const router = useRouter();
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, userSelect: 'none' }}>
+    <div onClick={() => router.push('/dashboard')} style={{ cursor: "pointer", display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, userSelect: 'none' }}>
       <img src="/logo.svg" alt="Voice 2 Invoice Logo" width={36} height={36} style={{ display: 'block', flexShrink: 0 }} />
       <div style={{
         display: 'flex',

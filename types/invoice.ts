@@ -20,7 +20,7 @@ export interface Invoice {
   total: number | null;
   currency: string;
   status: 'draft' | 'sent' | 'paid' | 'overdue' | 'synced';
-  source: 'whatsapp' | 'web' | 'upload';
+  source: 'web_audio' | 'web_text' | 'whatsapp_audio' | 'whatsapp_text' | 'upload' | 'whatsapp' | 'web';
   raw_transcription: string | null;
   xero_invoice_id: string | null;
   created_at: string;
